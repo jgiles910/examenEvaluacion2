@@ -25,7 +25,6 @@ public class Controller {
 		daoPaciente = new PacienteDAO();
 		daoCita = new CitasDAO();
 	}
-
 	public void menuPaciente(ArrayList<Persona> listaList, int j) throws SQLException {
 		System.out.println("Bienvenido/a: " + listaList.get(j).getNombre() + " " + listaList.get(j).getApellido());
 
@@ -49,14 +48,15 @@ public class Controller {
 			}
 		} while (input != 2);
 	}
-
+	
 	private void verCitas(ArrayList<Persona> listaList, int j) throws SQLException {
+		
 		citasBaseDeDatos = daoCita.getAllCitas();
+		
 		for (int i = 0; i < citasBaseDeDatos.size(); i++) {
-			
-			if ( citasBaseDeDatos.get(i).getPaciente_id() == listaList.get(j).getId_usuario()  ) {
+			if (citasBaseDeDatos.get(i).getPaciente_id() == listaList.get(j).getId_usuario()) {
 				
-					System.out.println(citasBaseDeDatos.get(i).toString());
+				System.out.println(citasBaseDeDatos.get(i).toString());
 			}
 		}
 	}
@@ -92,7 +92,6 @@ public class Controller {
 				break;
 			}
 		} while (input != 4);
-
 	}
 
 	private void modificarCitas(int idMedico) throws SQLException {
@@ -121,8 +120,6 @@ public class Controller {
 		if (!encontrado) {
 			System.out.println("Asegurate de que la Id que buscas existe.");
 		}
-		
-		
 	}
 
 	private void anyadirCita(ArrayList<Persona> listaList, int i) throws SQLException {
@@ -136,7 +133,6 @@ public class Controller {
 		Citas c = new Citas(idPaciente, listaList.get(i).getId_usuario(), fecha, hora);
 
 		daoCita.addCita(c);
-
 	}
 
 	private void anyadirPaciente(ArrayList<Persona> listaList, int i) throws SQLException {
@@ -151,7 +147,6 @@ public class Controller {
 
 		Paciente p = new Paciente(paciente, apellido, email, contrasenya, false,
 				listaList.get(i).getNombre() + " " + listaList.get(i).getApellido());
-
 		daoPaciente.addPaciente(p);
 		
 	}
@@ -168,7 +163,6 @@ public class Controller {
 
 		boolean loginCorrecto = false;
 
-		
 		for (int i = 0; i < listaList.size(); i++) {
 
 			if (listaList.get(i).getNombre().equalsIgnoreCase(nombre)
@@ -176,33 +170,30 @@ public class Controller {
 				loginCorrecto = true;
 				System.out.println("Login correcto.");
 
-					if (listaList.get(i).isRol()) {
+				if (listaList.get(i).isRol()) {
 
-						System.out.println("\nEres medico.");
-						carga(loginCorrecto);
-						System.out.println("Fichero de citas cargado OK.");
-						menuMedico(listaList, i);
-						break;
-						
-					} else if (!listaList.get(i).isRol() ){
+					System.out.println("\nEres medico.");
+					carga(loginCorrecto);
+					System.out.println("Fichero de citas cargado OK.");
+					menuMedico(listaList, i);
+					break;
 
-						System.out.println("\nEres paciente.");
-						carga(loginCorrecto);
-						System.out.println("Fichero de citas cargado OK.");
-						menuPaciente(listaList, i);
-						break;
-					} 
-				} 
-					
-				
-			}	if(!loginCorrecto) {
-				System.out.println("Login incorrecto. Paciente o médico no encontrado.");
+				} else if (!listaList.get(i).isRol()) {
+					System.out.println("\nEres paciente.");
+					carga(loginCorrecto);
+					System.out.println("Fichero de citas cargado OK.");
+					menuPaciente(listaList, i);
+					break;
+				}
 			}
-			
-		} 
+		}
+		if (!loginCorrecto) {
+			System.out.println("Login incorrecto. Paciente o médico no encontrado.");
+		}
+	}
 
 	public void carga(boolean loginCorrecto) throws SQLException, FileNotFoundException {
-		
+
 		if (loginCorrecto == true) {
 			citasCargadas = daoCita.insertAllCitas();
 			citasCargadas.toString();
@@ -210,8 +201,7 @@ public class Controller {
 			for (int i = 0; i < citasCargadas.size(); i++) {
 
 				daoCita.addCita(citasCargadas.get(i));
-
 			}
-		} 
+		}
 	}
 }
