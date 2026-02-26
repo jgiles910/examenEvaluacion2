@@ -2,16 +2,16 @@ package model;
 
 public final class Paciente extends Persona {
 
-	private String medico;
+
 	
 	
 	public Paciente() {
 		super();
 	}
-	public Paciente(int id_usuario, String nombre, String apellido, String email, String contrasenya, boolean rol, String medico) {
-		super(id_usuario, nombre, apellido, email, contrasenya, rol);
+	public Paciente( String nombre, String apellido, String email, String contrasenya, boolean rol, String medico) {
+		super(nombre, apellido, email, contrasenya, rol, medico);
 		super.rol = false;
-		this.medico = null;
+		this.medico = medico;
 	}
 	
 	public String getMedico() {
@@ -20,10 +20,8 @@ public final class Paciente extends Persona {
 	public void setMedico(String medico) {
 		this.medico = medico;
 	}
-	public Paciente(int id_usuario, String nombre, String apellido, String email, String contrasenya, boolean rol) {
-		super(id_usuario, nombre, apellido, email, contrasenya, rol);
-		
-	}
+	
+
 
 	@Override
 	public String toString() {

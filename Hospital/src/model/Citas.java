@@ -84,7 +84,7 @@ public class Citas {
 				+ "IdPaciente:" + paciente_id + "*"
 				+ "IdMedico:" + medico_id + "*"
 				+ "Fecha:" + fecha + "*"
-				+ "Hora:" + hora;
+				+ "Hora:" + hora +"\n";
 	}
 	
 	

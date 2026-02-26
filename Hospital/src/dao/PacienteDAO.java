@@ -21,7 +21,7 @@ public class PacienteDAO {
         Connection con = null;
         try {
             con = DriverManager.getConnection(URL, USER, PASS);
-            System.out.println("Conectado a la base de datos.");
+            
         } catch (SQLException e) {
             System.err.println("Error durante la conexión a la base de datos: " + e.getMessage());
         }
@@ -59,21 +59,23 @@ public class PacienteDAO {
     
     public void addPaciente(Paciente p) throws SQLException {
 
-		ArrayList<Paciente> listaPaciente = new ArrayList<Paciente>();
 
-		String sql = "INSERT INTO `usuarios`(`id`, `nombre`, `apellido`, `email`, `contrasena`, `rol`, `medico`) VALUES (?,?,?,?,?,?,?)";
 
-		try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
+		String sql = "INSERT INTO usuarios(id,nombre,apellido,email,contrasena,rol, medico) VALUES (NULL,?,?,?,?,?,?)";
 
-			ps.setInt(0, p.getId_usuario());
+		try (Connection con = getConnection(); 
+				PreparedStatement ps = con.prepareStatement(sql);) {
+
+	
 			ps.setString(1, p.getNombre());
 			ps.setString(2, p.getApellido());
 			ps.setString(3, p.getEmail());
 			ps.setString(4, p.getContrasenya());
 			ps.setBoolean(5, p.isRol());
 			ps.setString(6, p.getMedico());
-
+			
 			ps.executeUpdate();
+			
 		}
 	}
 }

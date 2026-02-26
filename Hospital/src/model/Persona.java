@@ -22,7 +22,7 @@ public class Persona {
 	protected String email;
 	protected String contrasenya;
 	protected boolean rol;
-	private String medico;
+	protected String medico;
 	
 	
 	
@@ -30,9 +30,8 @@ public class Persona {
 		super();
 	}
 
-	public Persona(int id_usuario, String nombre, String apellido,String email, String contrasenya, boolean rol, String medico) {
+	public Persona( String nombre, String apellido,String email, String contrasenya, boolean rol, String medico) {
 		super();
-		this.id_usuario = id_usuario;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.email = email;
@@ -40,7 +39,7 @@ public class Persona {
 		this.rol = rol;
 		this.medico = medico;
 	}
-	public Persona(int id_usuario, String nombre, String apellido,String email, String contrasenya, boolean rol) {
+	public Persona(int id_usuario, String nombre, String apellido,String email, String contrasenya, boolean rol,  String medico) {
 		super();
 		this.id_usuario = id_usuario;
 		this.nombre = nombre;
@@ -105,7 +104,7 @@ public class Persona {
 				+ "Nombre:" + nombre + "*"
 				+ "Apellido:" + apellido + "*"
 				+ "Email:" + email + "*"
-				+ "Contrasenya:" + contrasenya + "*"
+				+ "Contraseña:" + contrasenya + "*"
 				+ "Rol:" + rol;
 	}
 	

@@ -5,11 +5,6 @@ public class Medico extends Persona {
 	public Medico() {
 		super();
 	}
-	
-	public Medico(int id_usuario, String nombre, String apellido, String email, String contrasenya, boolean rol) {
-		super(id_usuario, nombre, apellido, email, contrasenya, rol);
-		
-	}
 
 	@Override
 	public String toString() {

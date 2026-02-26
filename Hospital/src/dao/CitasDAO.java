@@ -16,7 +16,7 @@ import model.Persona;
 
 public class CitasDAO {
 
-	private static final String ruta = "C:\\Users\\1AWA-9\\ExamenEvaluacion2Programacion\\Hospital\\src\\dao\\Citas.txt";
+	private static final String ruta = "Citas.txt";
 	private static final String URL = "jdbc:mysql://localhost:3306/hospital";
 	private static final String USER = "root";
 	private static final String PASS = "";
@@ -25,7 +25,7 @@ public class CitasDAO {
 		Connection con = null;
 		try {
 			con = DriverManager.getConnection(URL, USER, PASS);
-			System.out.println("Conectado a la base de datos.");
+
 		} catch (SQLException e) {
 			System.err.println("Error durante la conexión a la base de datos: " + e.getMessage());
 		}
@@ -37,31 +37,22 @@ public class CitasDAO {
 
 	public void updateCita(Citas c) throws SQLException {
 
-		ArrayList<Citas> listaCitas = new ArrayList<Citas>();
-
-		String sql = "Update citas" + "`paciente_id`=?,`medico_id`=?,`fecha`=?,`hora`=? where id = ?";
-// UPDATE `citas` SET `id`='[value-1]',`paciente_id`='[value-2]',`medico_id`='[value-3]',`fecha`='[value-4]',`hora`='[value-5]' WHERE 1
+		String sql = "Update citas set fecha=?, hora=? where id =?";
 
 		try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 
-		
-			ps.setInt(0, c.getPaciente_id());
-			ps.setInt(1, c.getMedico_id());
-			ps.setString(2, c.getFecha());
-			ps.setInt(3, c.getHora());
-
-			ps.setInt(4, c.getId());
+			ps.setString(1, c.getFecha());
+			ps.setInt(2, c.getHora());
+			ps.setInt(3, c.getId());
 
 			ps.executeUpdate();
 		}
 	}
 
 	// delete Citas
-	public void deleteCita(Citas c) throws SQLException {
+	public void deleteCita() throws SQLException {
 
-		ArrayList<Citas> listaCitas = new ArrayList<Citas>();
-
-		String sql = "Delete * from citas";
+		String sql = "Delete from citas";
 
 		try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 			ps.executeUpdate();
@@ -80,54 +71,52 @@ public class CitasDAO {
 				ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
-				listaCitas.add(new Citas(rs.getInt("id"), rs.getInt("nombre"), rs.getInt("Apellido"),
-						rs.getString("email"), rs.getInt("contraseña")
+				listaCitas.add(new Citas(rs.getInt("id"), rs.getInt("paciente_id"), rs.getInt("medico_id"),
+						rs.getString("fecha"), rs.getInt("hora")
 
 				));
 			}
+		}
+		return listaCitas;
+
+	}
+
+	public ArrayList<Citas> insertAllCitas() throws FileNotFoundException {
+		try {
+		ArrayList<Citas> listaCitas = new ArrayList<Citas>();
+
+		File file = new File(ruta);
+
+		Scanner scFile = new Scanner(file);
+
+		scFile.nextLine();
+		
+			while (scFile.hasNext()) {
+
+				String[] campos = scFile.nextLine().split(",");
+
+				listaCitas.add(new Citas(
+
+						Integer.valueOf(campos[0]), Integer.valueOf(campos[1]), campos[2], Integer.valueOf(campos[3])));
+			}
+
+			scFile.close();
+
+			return listaCitas;
+
+		} catch (Exception e) {
+			System.err.println("Error al cargar fichero de citas");
 		}
 		return null;
 
 	}
 
-	public ArrayList<Citas> insertAllCitas() throws FileNotFoundException {
-
-		ArrayList<Citas> listaCitas = new ArrayList<Citas>();
-
-		File file = new File(ruta);
-		
-		Scanner scFile = new Scanner(file);
-
-		scFile.nextLine();
-		System.out.println(scFile.nextLine());
-		while (scFile.hasNext()) {
-
-			String[] campos = scFile.nextLine().split(",");
-
-			listaCitas.add(new Citas(
-					
-					Integer.valueOf(campos[0]),
-					Integer.valueOf(campos[1]),
-					campos[2],
-					Integer.valueOf(campos[3]) )
-					);
-		}
-
-		scFile.close();
-
-		return listaCitas;
-
-	}
-
 	public void addCita(Citas c) throws SQLException {
 
-		ArrayList<Citas> listaCitas = new ArrayList<Citas>();
-
-		String sql = "Insert into `citas` (`id`, `paciente_id`, `medico_id`, `fecha`, `hora`) VALUES (NULL, ?, ?, ?, ?) ";
+		String sql = "Insert into citas (id, paciente_id, medico_id, fecha, hora) VALUES (NULL, ?, ?, ?, ?) ";
 
 		try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sql);) {
 
-			ps.setInt(0, c.getId());
 			ps.setInt(1, c.getPaciente_id());
 			ps.setInt(2, c.getMedico_id());
 			ps.setString(3, c.getFecha());
