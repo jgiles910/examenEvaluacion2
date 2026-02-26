@@ -1,0 +1,8 @@
+paciente_id, medico_id, fecha, hora
+3,1, Lunes,9
+4,1, Lunes,10
+5,2, Martes,11
+6,2, Miercoles,8
+
+
+

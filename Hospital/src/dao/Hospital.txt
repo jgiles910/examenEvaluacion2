@@ -1,0 +1,57 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+-- Database sortzea
+CREATE DATABASE IF NOT EXISTS `Hospital`
+DEFAULT CHARACTER SET utf8mb4
+COLLATE utf8mb4_general_ci;
+
+USE `Hospital`;
+
+-- --------------------------------------------------------
+-- TAULA: usuarios
+-- --------------------------------------------------------
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) DEFAULT NULL,        -- nombre
+  `apellido` varchar(50) DEFAULT NULL,      -- apellido
+  `email` varchar(100) DEFAULT NULL,        -- email
+  `contrasena` varchar(100) DEFAULT NULL,   -- contraseña
+  `rol` int(1) DEFAULT NULL,                -- 1 = médico, 0 = paciente
+  `medico` varchar(100) DEFAULT NULL,       -- para pacientes, nombre y apellido del médico
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insertar datos: usuarios
+INSERT INTO `usuarios`
+(`nombre`, `apellido`, `email`, `contrasena`, `rol`, `medico`) VALUES
+('Ane', 'Etxeberria', 'ane@ospitalea.eus', '1234', 1, NULL),
+('Mikel', 'Gomez', 'mikel@ospitalea.eus', 'abcd', 1, NULL),
+('Jon', 'Perez', 'jon@gmail.com', 'pass1', 0, 'Ane Etxeberria'),
+('Maite', 'Lopez', 'maite@gmail.com', 'pass2', 0, 'Ane Etxeberria'),
+('Unai', 'Garcia', 'unai@gmail.com', 'pass3', 0, 'Mikel Gomez'),
+('Leire', 'Martinez', 'leire@gmail.com', 'pass4', 0, 'Mikel Gomez');
+
+-- --------------------------------------------------------
+-- TABLA: citas
+-- --------------------------------------------------------
+CREATE TABLE `citas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paciente_id` int(11) DEFAULT NULL,    -- id del paciente
+  `medico_id` int(11) DEFAULT NULL,      -- id del médico
+  `fecha` varchar(20) DEFAULT NULL,        -- día de la semana (e.g., "Lunes")
+  `hora` int(11) DEFAULT NULL,           -- hora como número entero (e.g., 9 = 9:00)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `citas_paciente_fk`
+    FOREIGN KEY (`paciente_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `citas_medico_fk`
+    FOREIGN KEY (`medico_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+COMMIT;
+
