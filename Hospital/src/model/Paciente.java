@@ -10,6 +10,7 @@ public final class Paciente extends Persona {
 	}
 	public Paciente( String nombre, String apellido, String email, String contrasenya, boolean rol, String medico) {
 		super(nombre, apellido, email, contrasenya, rol, medico);
+		
 		super.rol = false;
 		this.medico = medico;
 	}

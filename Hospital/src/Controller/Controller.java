@@ -125,6 +125,7 @@ public class Controller {
 	private void anyadirCita(ArrayList<Persona> listaList, int i) throws SQLException {
 
 		System.out.println("Id de paciente");
+		
 		int idPaciente = Integer.parseInt(sc.nextLine());
 		System.out.println("Fecha de la cita: ");
 		String fecha = sc.nextLine();
@@ -135,6 +136,9 @@ public class Controller {
 		daoCita.addCita(c);
 	}
 
+	// Añadir Paciente, le paso la listaDePersonas + la posicion del medico que esta creando al paciente
+	// con el fin de concatenar el nombre del medico y su apellido al crear al paciente
+	
 	private void anyadirPaciente(ArrayList<Persona> listaList, int i) throws SQLException {
 		System.out.println("Nombre de paciente");
 		String paciente = sc.nextLine();
@@ -145,6 +149,9 @@ public class Controller {
 		System.out.println("Contraseña de paciente");
 		String contrasenya = sc.nextLine();
 
+		// el constructor tendria el siguiente aspecto: 
+//Jonathan|Gilesl|Email@test.com|12345678|rol(0 cuando es paciente), Nombre Apellido(del medico) "
+//4
 		Paciente p = new Paciente(paciente, apellido, email, contrasenya, false,
 				listaList.get(i).getNombre() + " " + listaList.get(i).getApellido());
 		daoPaciente.addPaciente(p);
@@ -152,52 +159,66 @@ public class Controller {
 	}
 
 	public void login() throws SQLException, FileNotFoundException {
-
+//pregunto al usuario por sus datos de inicio de sesion
 		System.out.println("Introduce tu Nombre ");
 		String nombre = sc.nextLine();
 
 		System.out.println("Introduce tu Contraseña ");
 		String contrasenya = sc.nextLine();
-
-		ArrayList<Persona> listaList = daoPaciente.getAllUsuarios();
-
+//recojo todos los usuarios de la base de datos
+		ArrayList<Persona> listaUsuarios = daoPaciente.getAllUsuarios();
+//inicializco un booleano a false
 		boolean loginCorrecto = false;
-
-		for (int i = 0; i < listaList.size(); i++) {
-
-			if (listaList.get(i).getNombre().equalsIgnoreCase(nombre)
-					&& listaList.get(i).getContrasenya().equalsIgnoreCase(contrasenya)) {
+//recorro la lista de usuarios
+		for (int i = 0; i < listaUsuarios.size(); i++) {
+//condicion: algun nombre y contraseña de la lista coincide con los datos introducidos por el usuario 
+			if (listaUsuarios.get(i).getNombre().equalsIgnoreCase(nombre)
+					&& listaUsuarios.get(i).getContrasenya().equalsIgnoreCase(contrasenya)) {
+				//significa que coinciden, cambio el booleano a true
 				loginCorrecto = true;
 				System.out.println("Login correcto.");
+//con la posicion del indice donde haya coincidencia, comparo el atributo rol
+				
+				if (listaUsuarios.get(i).isRol()) {
+//si el rol es igual a true, es decir, es medico, hago la carga de fichero,
 
-				if (listaList.get(i).isRol()) {
-
+//lo que me devuelve la carga de fichero es un arraylist global, el cual usaré mas tarde
 					System.out.println("\nEres medico.");
 					carga(loginCorrecto);
 					System.out.println("Fichero de citas cargado OK.");
-					menuMedico(listaList, i);
+			   // y finalmente le muestro el menu del medico, la lista + su posicion y salgo con break;
+					menuMedico(listaUsuarios, i);
 					break;
 
-				} else if (!listaList.get(i).isRol()) {
+				} else if (!listaUsuarios.get(i).isRol()) {
+				// en caso de que el rol sea false, significará que es paciente,
+				//igualmente hago la carga del fichero
 					System.out.println("\nEres paciente.");
 					carga(loginCorrecto);
 					System.out.println("Fichero de citas cargado OK.");
-					menuPaciente(listaList, i);
+					
+				//y finalmente le mando el menu de paciente con la poisicion donde coincide.
+					menuPaciente(listaUsuarios, i);
 					break;
 				}
 			}
 		}
+		// si el boolean loginCorrecto sigue siendo falso, es decir, no ha habido coincidencia de tanto contraseña y nombre en la lista que he recorrido, le muestro un mensaje de error.
 		if (!loginCorrecto) {
 			System.out.println("Login incorrecto. Paciente o médico no encontrado.");
 		}
 	}
 
+	//metodo de carga del fichero local citas.
 	public void carga(boolean loginCorrecto) throws SQLException, FileNotFoundException {
 
+		//login=correcto equivale a que el usuario y la contraseña han sido validas, si esto es asi, paso la lista recogida de citas.txt a la lista global "citasCargadas" y la muestro
 		if (loginCorrecto == true) {
 			citasCargadas = daoCita.insertAllCitas();
 			citasCargadas.toString();
-
+			
+			//importante.
+			//cada vez que hago la lectura del fichero citas.txt, lo subo a la base de datos con el siguiente metodo.
 			for (int i = 0; i < citasCargadas.size(); i++) {
 
 				daoCita.addCita(citasCargadas.get(i));
